@@ -1,3 +1,5 @@
+setup awal nya : harus download MariaDB dan go terelbih dahulu serta extension go
+
 public-profile-api/
 │
 ├── main.go
@@ -10,10 +12,23 @@ public-profile-api/
 └── graph/
 
 Fungsi singkatnya:
-
 config/ → konfigurasi aplikasi nantinya.
 database/ → koneksi MariaDB.
 models/ → struktur data, misalnya Person.
 repository/ → query/pengambilan data dari database.
 service/ → logika aplikasi, misalnya memilih profil secara random.
 graph/ → GraphQL schema dan resolver nanti.
+
+Ini bukan menginstall MariaDB server lagi. Ini hanya library/driver agar aplikasi Go kita bisa berkomunikasi dengan MariaDB.
+go get github.com/go-sql-driver/mysql
+
+
+go mod tidy digunakan untuk merapikan dan menyinkronkan dependency/module Go dalam project. 👍
+Dalam kasus kamu, fungsinya:
+Menambahkan dependency yang memang digunakan.
+Menghapus dependency yang tidak digunakan.
+Memperbaiki status // indirect jika dependency sebenarnya dipakai langsung.
+Memperbarui go.mod dan go.sum agar sesuai dengan kode project.
+
+
+Perintah go run main.go digunakan untuk materi/menguji (menjalankan) program Go secara langsung dari file main.go tanpa perlu membuat file executable (seperti file .exe di Windows) secara permanen terlebih dahulu.
