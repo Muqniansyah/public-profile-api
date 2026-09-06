@@ -1,0 +1,19 @@
+public-profile-api/
+│
+├── main.go
+│
+├── config/
+├── database/
+├── models/
+├── repository/
+├── service/
+└── graph/
+
+Fungsi singkatnya:
+
+config/ → konfigurasi aplikasi nantinya.
+database/ → koneksi MariaDB.
+models/ → struktur data, misalnya Person.
+repository/ → query/pengambilan data dari database.
+service/ → logika aplikasi, misalnya memilih profil secara random.
+graph/ → GraphQL schema dan resolver nanti.
