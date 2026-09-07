@@ -44,8 +44,11 @@ func main() {
 		),
 	)
 
-	// Endpoint GraphQL.
-	http.Handle("/query", srv)
+	// Endpoint GraphQL dengan konfigurasi CORS.
+	http.Handle(
+		"/query",
+		corsMiddleware(srv),
+	)
 
 	// Menampilkan pesan ke terminal bahwa server GraphQL siap digunakan
 	fmt.Println("GraphQL Server is running!")
@@ -53,4 +56,37 @@ func main() {
 
 	// Menjalankan HTTP server pada port 8080.
 	log.Fatal(http.ListenAndServe(":8080", nil))
+}
+
+// corsMiddleware mengatur izin akses Cross-Origin Resource Sharing (CORS).
+func corsMiddleware(next http.Handler) http.Handler {
+    return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+
+        // Mengizinkan frontend Vite mengakses backend GraphQL.
+        w.Header().Set(
+            "Access-Control-Allow-Origin",
+            "http://localhost:5173",
+        )
+
+        // Mengizinkan method HTTP yang digunakan frontend.
+        w.Header().Set(
+            "Access-Control-Allow-Methods",
+            "POST, GET, OPTIONS",
+        )
+
+        // Mengizinkan header Content-Type dari request fetch().
+        w.Header().Set(
+            "Access-Control-Allow-Headers",
+            "Content-Type",
+        )
+
+        // Browser mengirim preflight request OPTIONS sebelum POST tertentu.
+        if r.Method == http.MethodOptions {
+            w.WriteHeader(http.StatusNoContent)
+            return
+        }
+
+        // Meneruskan request ke GraphQL server.
+        next.ServeHTTP(w, r)
+    })
 }
