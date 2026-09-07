@@ -42,3 +42,17 @@ func Connect() error {
 	// Mengembalikan nil (tanpa error) jika koneksi berhasil
 	return nil
 }
+
+// Close menutup koneksi database jika koneksi sedang aktif.
+func Close() error {
+
+	// Mengecek apakah koneksi database tersedia.
+	if DB != nil {
+
+		// Menutup koneksi database.
+		return DB.Close()
+	}
+
+	// Tidak ada error jika koneksi belum pernah dibuat.
+	return nil
+}

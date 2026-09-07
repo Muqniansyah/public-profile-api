@@ -28,6 +28,13 @@ func main() {
 		log.Fatal("Failed to connect to database: ", err)
 	}
 
+	// Menutup koneksi database ketika aplikasi berhenti menggunakan anonymous function.
+	defer func() {
+		if err := database.Close(); err != nil {
+			log.Println("Failed to close database:", err)
+		}
+	}()
+
 	// Membuat GraphQL server menggunakan schema dan resolver.
 	srv := handler.NewDefaultServer(
 		generated.NewExecutableSchema(

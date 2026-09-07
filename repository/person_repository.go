@@ -1,6 +1,9 @@
 package repository
 
 import (
+	"database/sql"
+	"fmt"
+
 	"public-profile-api/database"
 	"public-profile-api/models"
 )
@@ -96,7 +99,12 @@ func GetPersonByID(id int) (models.Person, error) {
 		&person.Country,
 	)
 
-	// Mengembalikan struct kosong dan error jika data tidak ditemukan atau query gagal
+	// Mengecek apakah data person dengan ID tersebut tidak ditemukan.
+	if err == sql.ErrNoRows {
+		return models.Person{}, fmt.Errorf("person with ID %d not found", id)
+	}
+
+	// Mengecek apakah terjadi error lain saat query database.
 	if err != nil {
 		return models.Person{}, err
 	}
