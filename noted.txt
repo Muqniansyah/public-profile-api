@@ -32,3 +32,42 @@ Memperbarui go.mod dan go.sum agar sesuai dengan kode project.
 
 
 Perintah go run main.go digunakan untuk materi/menguji (menjalankan) program Go secara langsung dari file main.go tanpa perlu membuat file executable (seperti file .exe di Windows) secara permanen terlebih dahulu.
+
+
+catatan :
+Struct pada model person.go ini merepresentasikan data dari tabel people:
+people (MariaDB)
+      ↓
+Person struct (Go)
+dan Struct pada model hobby.go ini merepresentasikan data dari tabel hobbies:
+Artinya:
+hobbies (MariaDB)
+      ↓
+Hobby struct (Go)
+
+pakai gqlgen untuk GraphQL Server Go. Ini cocok karena schema-first dan bisa generate kode GraphQL otomatis.
+Ini menambahkan gqlgen sebagai tool dependency di project, bukan menginstal database atau aplikasi terpisah
+go get -tool github.com/99designs/gqlgen
+
+Setelah selesai, jalankan: go tool gqlgen init
+Command kedua ini akan membuat struktur awal GraphQL yaitu membuat file schema graphql, termasuk kurang lebih:
+graph/
+├── generated/
+├── model/
+├── resolver.go
+├── schema.graphqls
+└── schema.resolvers.go
+
+gqlgen.yml
+server.go
+
+
+go tool gqlgen generate -> digunakan untuk membaca schema.graphqls, lalu membuat kode Go secara otomatis.
+schema.graphqls
+= kita yang menentukan bentuk API
+
+gqlgen generate
+= gqlgen membuat kode Go otomatis berdasarkan bentuk tersebut
+
+resolver
+= kita yang menghubungkan GraphQL dengan service kita
