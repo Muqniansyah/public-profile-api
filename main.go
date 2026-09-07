@@ -6,57 +6,44 @@ import (
 	// Modul untuk mencetak pesan ke terminal
 	"fmt"
 
+	// Modul standar Go untuk penanganan log dan HTTP server
+	"log"
+	"net/http"
+
 	// Mengimpor package database buatan sendiri
 	"public-profile-api/database"
+	// Mengimpor resolver dan schema GraphQL buatan sendiri
+	"public-profile-api/graph"
+	"public-profile-api/graph/generated"
 
-	// Mengimpor package service untuk mengakses logika bisnis
-	"public-profile-api/service"
+	// Mengimpor handler GraphQL dari library gqlgen
+	"github.com/99designs/gqlgen/graphql/handler"
 )
 
 // Fungsi main adalah titik awal (entry point) eksekusi program.
 func main() {
-	// 1. Memanggil fungsi Connect() untuk menyambungkan ke database
+	// Menghubungkan aplikasi ke database.
 	err := database.Connect()
-	// Mengecek apakah koneksi database mengalami error
 	if err != nil {
-		fmt.Println("Failed to connect to database:", err)
-		return
+		log.Fatal("Failed to connect to database: ", err)
 	}
 
-	// 2. Mengambil seluruh data orang melalui layer service
-	people, err := service.GetAllPeople()
-	// Mengambil seluruh data orang melalui layer service
-	if err != nil {
-		fmt.Println("Failed to get people:", err)
-		return
-	}
+	// Membuat GraphQL server menggunakan schema dan resolver.
+	srv := handler.NewDefaultServer(
+		generated.NewExecutableSchema(
+			generated.Config{
+				Resolvers: &graph.Resolver{},
+			},
+		),
+	)
 
-	// Menampilkan daftar orang satu per satu ke terminal
-	for _, person := range people {
-		fmt.Println(person)
-	}
+	// Endpoint GraphQL.
+	http.Handle("/query", srv)
 
-	// 3. Mengambil data orang secara spesifik berdasarkan ID (contoh: ID 2)
-	person, err := service.GetPersonByID(2)
-	// Mengecek apakah terjadi error saat mengambil data orang berdasarkan ID
-	if err != nil {
-		fmt.Println("Failed to get person:", err)
-		return
-	}
-	// Menampilkan data orang spesifik ke terminal
-	fmt.Println(person)
+	// Menampilkan pesan ke terminal bahwa server GraphQL siap digunakan
+	fmt.Println("GraphQL Server is running!")
+	fmt.Println("GraphQL endpoint: http://localhost:8080/query")
 
-	// 4. Mengambil satu data orang secara acak dari database
-	randomPerson, err := service.GetRandomPerson()
-	// Mengecek apakah terjadi error saat mengambil data orang acak
-	if err != nil {
-		fmt.Println("Failed to get random person:", err)
-		return
-	}
-
-	// Menampilkan label dan data orang acak ke terminal
-	fmt.Println("Random Person:")
-	fmt.Println(randomPerson)
-
-	fmt.Println("public Profile Api is running!")
+	// Menjalankan HTTP server pada port 8080.
+	log.Fatal(http.ListenAndServe(":8080", nil))
 }
