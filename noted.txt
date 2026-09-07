@@ -71,3 +71,8 @@ gqlgen generate
 
 resolver
 = kita yang menghubungkan GraphQL dengan service kita
+
+
+untuk jalankan server:
+npm run dev untuk frontend
+go run main.go untuk backend
