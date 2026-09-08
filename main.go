@@ -83,12 +83,24 @@ func main() {
 // corsMiddleware mengatur izin akses Cross-Origin Resource Sharing (CORS).
 func corsMiddleware(next http.Handler) http.Handler {
     return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+        // Mengambil Origin dari request frontend.
+        origin := r.Header.Get("Origin")
 
-        // Mengizinkan frontend Vite mengakses backend GraphQL.
-        w.Header().Set(
-            "Access-Control-Allow-Origin",
-            "http://localhost:5173",
-        )
+        // Daftar frontend yang diizinkan mengakses backend.
+        allowedOrigins := map[string]bool{
+            "http://localhost:5173": true,
+            "https://public-profile-api.vercel.app": true,
+        }
+
+        // Mengizinkan Origin jika terdapat dalam daftar allowedOrigins.
+        if allowedOrigins[origin] {
+
+            w.Header().Set(
+                "Access-Control-Allow-Origin",
+                origin,
+            )
+
+        }
 
         // Mengizinkan method HTTP yang digunakan frontend.
         w.Header().Set(
@@ -104,11 +116,16 @@ func corsMiddleware(next http.Handler) http.Handler {
 
         // Browser mengirim preflight request OPTIONS sebelum POST tertentu.
         if r.Method == http.MethodOptions {
+
             w.WriteHeader(http.StatusNoContent)
+
             return
+
         }
 
         // Meneruskan request ke GraphQL server.
         next.ServeHTTP(w, r)
+
     })
+
 }
