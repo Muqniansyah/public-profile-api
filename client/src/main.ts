@@ -73,17 +73,20 @@ const peopleList = document.querySelector<HTMLDivElement>("#people-list")!;
 
 // Mengirim query GraphQL ke backend.
 async function graphqlRequest<T>(query: string): Promise<T> {
-  const response = await fetch("http://localhost:8080/query", {
-    method: "POST",
+  const response = await fetch(
+    "https://public-profile-api-8yih.vercel.app/query",
+    {
+      method: "POST",
 
-    headers: {
-      "Content-Type": "application/json",
+      headers: {
+        "Content-Type": "application/json",
+      },
+
+      body: JSON.stringify({
+        query,
+      }),
     },
-
-    body: JSON.stringify({
-      query,
-    }),
-  });
+  );
 
   const result = await response.json();
 
@@ -209,16 +212,18 @@ async function getRandomPerson(): Promise<void> {
 async function getPeople(): Promise<void> {
   try {
     // Mengirim request POST ke endpoint GraphQL backend.
-    const response = await fetch("http://localhost:8080/query", {
-      method: "POST",
+    const response = await fetch(
+      "https://public-profile-api-8yih.vercel.app/query",
+      {
+        method: "POST",
 
-      headers: {
-        "Content-Type": "application/json",
-      },
+        headers: {
+          "Content-Type": "application/json",
+        },
 
-      // Query GraphQL yang dikirim ke backend.
-      body: JSON.stringify({
-        query: `
+        // Query GraphQL yang dikirim ke backend.
+        body: JSON.stringify({
+          query: `
           query {
             people {
               id
@@ -238,8 +243,9 @@ async function getPeople(): Promise<void> {
             }
           }
         `,
-      }),
-    });
+        }),
+      },
+    );
 
     // Mengubah response menjadi JSON.
     const result: GraphQLResponse = await response.json();
