@@ -12,6 +12,9 @@ import (
 	"log"
 	"net/http"
 
+	// Library pihak ketiga untuk membaca dan memuat file konfigurasi .env ke dalam environment
+	"github.com/joho/godotenv"
+
 	// Mengimpor package database buatan sendiri
 	"public-profile-api/database"
 	// Mengimpor resolver dan schema GraphQL buatan sendiri
@@ -24,8 +27,15 @@ import (
 
 // Fungsi main adalah titik awal (entry point) eksekusi program.
 func main() {
+	// Memuat Environment Variables dari file .env.
+	err := godotenv.Load()
+
+	if err != nil {
+		log.Println("Warning: .env file not found, using system Environment Variables.")
+	}
+
 	// Menghubungkan aplikasi ke database.
-	err := database.Connect()
+	err = database.Connect()
 	if err != nil {
 		log.Fatal("Failed to connect to database: ", err)
 	}

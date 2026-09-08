@@ -1,9 +1,15 @@
 package config
 
-const (
-	DBHost     = "127.0.0.1"
-	DBPort     = "3306"
-	DBUser     = "root"
-	DBPassword = ""
-	DBName     = "public_profile_api"
-)
+import "os"
+
+// getEnv mengambil nilai Environment Variable dan jika tidak tersedia, menggunakan nilai default.
+func GetEnv(key string, fallback string) string {
+
+    value := os.Getenv(key)
+
+    if value == "" {
+        return fallback
+    }
+
+    return value
+}
