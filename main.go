@@ -5,6 +5,8 @@ package main
 import (
 	// Modul untuk mencetak pesan ke terminal
 	"fmt"
+	// Modul standar Go untuk berinteraksi dengan sistem operasi (misal: membaca Environment Variables)
+	"os"
 
 	// Modul standar Go untuk penanganan log dan HTTP server
 	"log"
@@ -54,8 +56,18 @@ func main() {
 	fmt.Println("GraphQL Server is running!")
 	fmt.Println("GraphQL endpoint: http://localhost:8080/query")
 
-	// Menjalankan HTTP server pada port 8080.
-	log.Fatal(http.ListenAndServe(":8080", nil))
+	// Mengambil port dari environment variable. (Vercel menyediakan PORT secara otomatis saat deployment)
+	port := os.Getenv("PORT")
+
+	// Menggunakan port 8080 jika aplikasi dijalankan secara lokal.
+	if port == "" {
+
+		port = "8080"
+
+	}
+
+	// Menjalankan HTTP server.
+	log.Fatal(http.ListenAndServe(":"+port, nil))
 }
 
 // corsMiddleware mengatur izin akses Cross-Origin Resource Sharing (CORS).

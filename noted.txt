@@ -74,5 +74,5 @@ resolver
 
 
 untuk jalankan server:
-npm run dev untuk frontend
+cd client (untuk masuk kefolder client) dan npm run dev untuk frontend
 go run main.go untuk backend
