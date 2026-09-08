@@ -107,7 +107,11 @@ function renderPerson(person: Person): string {
       <p><strong>Age:</strong> ${person.age}</p>
       <p><strong>Gender:</strong> ${person.gender}</p>
       <p><strong>Job:</strong> ${person.job}</p>
+      <p><strong>Phone:</strong> ${person.phone}</p>
+      <p><strong>Email:</strong> ${person.email}</p>
+      <p><strong>Address:</strong> ${person.address}</p>
       <p><strong>City:</strong> ${person.city}</p>
+      <p><strong>Country:</strong> ${person.country}</p>
 
       <div class="hobbies">
         <strong>Hobbies:</strong>
